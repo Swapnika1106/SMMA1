@@ -1,0 +1,23 @@
+import pandas as pd
+from textblob import TextBlob
+
+# Load your dataset, specifying the encoding as 'latin-1'
+df = pd.read_csv('/content/political_social_media.csv', encoding='latin-1')
+
+# Define a function to assign sentiment labels
+def assign_sentiment_textblob(text):
+    blob = TextBlob(text)
+    sentiment_score = blob.sentiment.polarity
+    
+    if sentiment_score > 0:
+        return 'Positive'
+    elif sentiment_score < 0:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+# Apply the function to the DataFrame
+df['sentiment'] = df['text'].apply(assign_sentiment_textblob)
+
+# View the results
+print(df[['text', 'sentiment']].head())
