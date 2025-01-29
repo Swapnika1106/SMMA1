@@ -1,0 +1,26 @@
+pip install pandas nltk
+import pandas as pd
+import re
+import nltk
+from nltk.corpus import stopwords
+
+nltk.download('stopwords')
+df = pd.read_csv('/political_social_media.csv', encoding='latin-1')
+# or 'iso-8859-1', or any other encoding that might be used by the file.
+def clean_text(text):
+    # Remove URLs
+    text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
+    # Remove special characters
+    text = re.sub(r'\W', ' ', text)
+    # Convert to lowercase
+    text = text.lower()
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    text = ' '.join(word for word in text.split() if word not in stop_words)
+    return text
+df['cleaned_text'] = df['text'].apply(clean_text)
+print(df[['text', 'cleaned_text']].head())
+print(df[['text', 'cleaned_text']].head())
+df.to_csv('cleaned_dataset.csv', index=False)
+df1 = pd.read_csv('/content/cleaned_dataset.csv')
+df1
